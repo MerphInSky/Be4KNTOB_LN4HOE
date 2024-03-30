@@ -1,33 +1,45 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
-
-enum class Direction : bool {
-	LEFT = 0,
-	RIGHT = 1
-};
-
-class Character {
-protected:
-	float m_health;
-	float m_speed;
-	sf::Vector2f m_size;
-	sf::Vector2f m_pos;
-	sf::Sprite m_sprite;
-	Direction m_direction = Direction::RIGHT;
-
+class Character { 
+private:
+    float x,y;
 public:
-	~Character();
-
-	virtual void Update(float time) = 0;
-	void takeDamage(float damage);
-
-	void setPosition(sf::Vector2f& pos);
-	void setDirection(Direction direction);
-
-	float getHP() const;
-	sf::Vector2f getSize() const;
-	sf::Vector2f getPosition() const;
-	sf::Sprite getSprite() const;
-	Direction getDirection() const;
+    float w, h, dx, dy, speed ;
+    int direction ; 
+    sf::String filename; 
+    sf::Image charimage;
+    sf::Texture chartexture;
+    sf::Sprite charsprite;
+    Character(sf::String F, float X, float Y, float W, float H){
+    dx=0;dy=0;speed=0;direction=0;
+    filename = F;
+    w = W; h = H;
+    charimage.loadFromFile("C:\\cmake-sfml-project-master\\src\\images\\" + filename);
+    chartexture.loadFromImage(charimage);
+    charsprite.setTexture(chartexture);
+    x = X; y = Y;
+    charsprite.setTextureRect(sf::IntRect(0, 0, w, h)); 
+    }
+    void update(float time)
+    {
+        switch (direction)
+        {
+            case 0: dx = speed; dy = 0; break;
+            case 1: dx = -speed; dy = 0; break;
+            case 2: dx = 0; dy = speed; break;
+            case 3: dx = 0; dy = -speed; break;
+    }
+ 
+    x += dx*time;
+    y += dy*time;
+ 
+    speed = 0;
+    charsprite.setPosition(x,y);
+    }
+    float GetX(){	
+		return x;
+	}
+	float GetY(){	 	
+		return y;
+	}
 };
